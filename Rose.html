@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Rose Day</title>
+    <style>
+        body {
+            background: linear-gradient(#0bb8d69d, #690e69bf);
+            color: white;
+            text-align: center;
+            font-family: cursive;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 90%;
+            padding: 20px;
+            display: none;
+        }
+        .entry-screen {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-size: 2em;
+            text-align: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+        h1 {
+            font-size: 2.5em;
+            text-shadow: 3px 3px 15px rgba(0,0,0,0.5);
+        }
+        .quote {
+            font-size: 1.2em;
+            margin-top: 15px;
+            font-style: italic;
+            font-family: 'Dancing Script', cursive;
+        }
+        .roses {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .rose {
+            width: 80px;
+            height: 80px;
+            margin: 8px;
+            animation: float 3s infinite ease-in-out;
+        }
+        .rose-in {
+            width: 120px;
+            height: 120px;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .hearts, .petals {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .heart, .petal {
+            position: absolute;
+            top: -10px;
+            width: 20px;
+            height: 20px;
+            background: red;
+            transform: rotate(-45deg);
+            animation: floatDown 5s linear infinite;
+        }
+        .petal {
+            background: rgb(252, 138, 157);
+            border-radius: 50%;
+            width: 15px;
+            height: 20px;
+            transform: rotate(20deg);
+        }
+        .heart::before, .heart::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: red;
+            border-radius: 50%;
+        }
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+        .heart::after {
+            left: 10px;
+            top: 0;}
+        @keyframes floatDown {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            .quote {
+                font-size: 1em;
+            }
+            .rose {
+                width: 80px;
+                height: 80px;
+            }
+            .rose-in {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="entry-screen" onclick="showPage()">
+        💖 Tap to Reveal Love 💖
+    </div>
+    
+    <audio id="bg-music" loop>
+        <source src="./satya.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <div class="container">
+        <div class="roses">  
+            <img class="rose" src="https://www.dpsainiflorist.com/wp-content/uploads/2019/05/pink-roses.png" alt="Rose">
+            <img class="rose" src="https://www.dpsainiflorist.com/wp-content/uploads/2019/05/pink-roses.png" alt="Rose">
+            <img class="rose" src="https://www.dpsainiflorist.com/wp-content/uploads/2019/05/pink-roses.png" alt="Rose">
+        </div>
+        <h1>Happy Rose Day</h1>
+        <h1>My Bestie...</h1>
+        <img class="rose-in" src="https://png.pngtree.com/png-clipart/20240302/original/pngtree-valentine-s-day-bouquet-png-image_14471786.png" alt="Rose">
+        <p class="quote">"You are the rose that makes my life bloom with love and happiness.</p>
+        <p class="quote">~ Satya</p>
+        <div class="roses">  
+            <img class="rose" src="https://www.dpsainiflorist.com/wp-content/uploads/2019/05/pink-roses.png" alt="Rose">
+            <img class="rose" src="https://www.dpsainiflorist.com/wp-content/uploads/2019/05/pink-roses.png" alt="Rose">
+            <img class="rose" src="https://www.dpsainiflorist.com/wp-content/uploads/2019/05/pink-roses.png" alt="Rose">
+        </div>
+    </div>
+    <div class="hearts"></div>
+    <div class="petals"></div>
+    <script>
+        function showPage() {
+            document.querySelector('.entry-screen').style.display = 'none';
+            document.querySelector('.container').style.display = 'block';
+            document.getElementById('bg-music').play();
+        }
+
+        function createElement(className, container) {
+            const element = document.createElement("div");
+            element.classList.add(className);
+            element.style.left = Math.random() * 100 + "vw";
+            element.style.animationDuration = Math.random() * 2 + 3 + "s";
+            element.style.transform = `rotate(${Math.random() * 360}deg)`;
+            document.querySelector(container).appendChild(element);
+            setTimeout(() => {
+                element.remove();
+            }, 5000);
+        }
+        setInterval(() => createElement("heart", ".hearts"), 300);
+        setInterval(() => createElement("petal", ".petals"), 400);
+    </script>
+</body>
+</html>
