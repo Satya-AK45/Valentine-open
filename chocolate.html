@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chiuu's Special Notes ❤️</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zeyada&display=swap">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: url("https://i.pinimg.com/736x/47/a1/09/47a109591cb73dd8358e537c7d415574.jpg") center/cover;
+            overflow: hidden;
+            position: relative;
+            margin: 0;
+        }
+
+        .message {
+            background: url("https://media.istockphoto.com/id/171144273/photo/really-big-bar-of-chocolate.jpg?s=612x612&w=0&k=20&c=clQms_61Ql51HxYAGq1GmPXU8ujIV4lJHRUZ95CN8lc=");
+            padding: 15px 40px;
+            box-shadow: 3px 10px 15px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            transform: rotate(var(--tilt));
+            border-radius: 10px;
+            max-width: 80%;
+            text-align: center;
+        }
+
+        .heart-note {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-family: 'Zeyada';
+        }
+
+        .message img {
+            max-width: 150px;
+            width: 100%;
+            border-radius: 8px;
+            display: block;
+            margin: 10px auto;
+        }
+
+        .text {
+            font-family: 'Zeyada';
+            font-size: 35px;
+            color: gold;
+            text-align: center;
+            user-select: none;
+        }
+
+        @media (max-width: 768px) {
+            .message {
+                padding: 10px 30px;
+                max-width: 90%;
+            }
+
+            .text {
+                font-size: 30px;
+            }
+
+            .heart-note {
+                width: 100px;
+                height: 100px;
+                font-size: 35px;
+            }
+
+            .message img {
+                max-width: 120px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="message heart-note">💖</div>
+
+    <div class="message"><p class="text">Dammm... you are my cadbury?😍(Ti Mothi wali 😉)</p><img src="./img/chiu1.jpg" /></div>
+    <div class="message"><p class="text">ur my To'ak Chocolate😉🍫</p><img src="./img/chiu2.jpg" /></div>
+    <div class="message"><p class="text">Ur my Kitkat😋</p><img src="./img/chiu3.jpg" /></div>
+    <div class="message"><p class="text">Hey Sweet Heart that is for uhh... (Dairy Milk Silk Heart Blush Chocolate Bar) ✨</p></div>
+
+    <script>
+        const music = new Audio("/satya3.mp3");
+        music.volume = 0.5;
+        music.loop = true;
+
+        document.addEventListener("click", () => {
+            music.play().catch(() => console.log("User interaction required to play audio."));
+        });
+
+        document.querySelectorAll(".message").forEach(note => {
+            note.style.setProperty('--tilt', `${Math.random() * 20 - 10}deg`);
+            let zIndex = 1, offsetX = 0, offsetY = 0, dragging = false;
+
+            note.addEventListener("mousedown", initiateMove);
+            note.addEventListener("touchstart", initiateMove, { passive: false });
+
+            function initiateMove(e) {
+                e.preventDefault();
+                dragging = true;
+                zIndex++;
+                note.style.zIndex = zIndex;
+                let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                offsetX = clientX - note.offsetLeft;
+                offsetY = clientY - note.offsetTop;
+
+                document.addEventListener("mousemove", drag);
+                document.addEventListener("mouseup", release);
+                document.addEventListener("touchmove", drag, { passive: false });
+                document.addEventListener("touchend", release);
+            }
+
+            function drag(e) {
+                if (!dragging) return;
+                let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                note.style.left = `${clientX - offsetX}px`;
+                note.style.top = `${clientY - offsetY}px`;
+            }
+
+            function release() {
+                dragging = false;
+                document.removeEventListener("mousemove", drag);
+                document.removeEventListener("mouseup", release);
+                document.removeEventListener("touchmove", drag);
+                document.removeEventListener("touchend", release);
+            }
+        });
+    </script>
+</body>
+
+</html>
