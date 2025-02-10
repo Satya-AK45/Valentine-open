@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey Bestie..❤️</title>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "*************",
+            authDomain: "chiuu-*****.firebaseapp.com",
+            projectId: "chiuu-*****",
+            storageBucket: "chiuu-*****.appspot.com",
+            messagingSenderId: "**********",
+            appId: "1:**********:web:***************",
+            measurementId: "G-************"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const loveSong = new Audio("/satya1.mp3");
+        loveSong.volume = 0.5;
+
+        const questions = [
+            "Hey Bestie..!👋🏻 Please enter ur good Name...?❤️",
+            "Enter ur Mobile No or Insta ID",
+            "🌟 If we were in a movie, what kind of love story would it be? 🎬💕",
+            "🎵 What song reminds you of 'us'? 🎶💑",
+            "🏝️ If we could run away together, where would we go? ✈️❤️",
+            "😍 What’s the one thing I do that makes you smile the most? 😊",
+            "💖 Can you describe me in three words? 😘",
+            "💍 Would you spend forever with me? ❤️"
+        ];
+
+        let currentQuestionIndex = 0;
+        let responses = {};
+        let noCount = 0;
+        let finalYesGiven = false;
+
+        const noResponses = [
+            "Are you sure? Think about our happiest moments... 🥺💕",
+            "Aisaa Nako na karu natar bhandu ki 🥰",
+            "What if I promise to make you smile every day? 😊",
+            "Imagine us growing old together... isn't that beautiful? 🥰",
+            "Okay, last chance... Will you say Yes now? 💍",
+            "Nako Na Please ase karu Ho bol...!🥺"
+        ];
+
+        function fadeInText(element, text) {
+            element.style.opacity = "0";
+            setTimeout(() => {
+                element.innerText = text;
+                element.style.opacity = "1";
+            }, 300);
+        }
+
+        function askNextQuestion() {
+            const questionText = document.getElementById('questionText');
+            const answerButtons = document.getElementById('answerButtons');
+            answerButtons.innerHTML = "";
+
+            if (currentQuestionIndex < questions.length) {
+                fadeInText(questionText, questions[currentQuestionIndex]);
+
+                const inputBox = document.createElement("input");
+                inputBox.type = "text";
+                inputBox.placeholder = "Type your answer here...";
+                inputBox.id = "textAnswer";
+                inputBox.className = "text-input";
+                inputBox.autofocus = true;
+
+                const submitButton = document.createElement("button");
+                submitButton.innerText = "Submit ❤️";
+                submitButton.className = "submit-btn";
+                submitButton.disabled = true;
+
+                inputBox.addEventListener("input", () => {
+                    submitButton.disabled = inputBox.value.trim() === "";
+                });
+
+                submitButton.onclick = () => saveResponse(inputBox.value);
+
+                answerButtons.appendChild(inputBox);
+                answerButtons.appendChild(submitButton);
+                inputBox.focus();
+            } else {
+                askFinalQuestion();
+            }
+        }
+
+        function askFinalQuestion() {
+            fadeInText(document.getElementById('questionText'), "💍 This is the most important question... Will you marry me? ❤️");
+            const answerButtons = document.getElementById('answerButtons');
+            answerButtons.innerHTML = "";
+
+            ["Yes! 💕", "No 😢"].forEach(answer => {
+                const button = document.createElement("button");
+                button.innerText = answer;
+                button.className = "answer-btn";
+                button.onclick = () => handleFinalAnswer(answer);
+                answerButtons.appendChild(button);
+            });
+        }
+
+        async function saveResponse(answer) {
+            if (!answer.trim()) return;
+
+            responses[questions[currentQuestionIndex]] = answer;
+            currentQuestionIndex++;
+            askNextQuestion();
+        }
+
+        async function handleFinalAnswer(finalAnswer) {
+            if (finalYesGiven) return;
+
+            if (finalAnswer.includes("Yes")) {
+                finalYesGiven = true;
+                responses["Final Proposal"] = "Yes";
+                responses["Times She Said No"] = noCount;
+                loveSong.play();
+                await saveToDatabase();
+                showFinalMessage();
+            } else {
+                noCount++;
+                const message = noCount <= noResponses.length ? noResponses[noCount - 1] : " केव्हापर्यंत नाही म्हणशील तू Yes करत नाही तोपर्यंत विचारेन Will you marry me?❤️";
+                fadeInText(document.getElementById('questionText'), message);
+
+                document.getElementById('answerButtons').innerHTML = "";
+                ["Okay Fine, Yes 💍", "Still No... 😔"].forEach(answer => {
+                    const button = document.createElement("button");
+                    button.innerText = answer;
+                    button.className = "answer-btn";
+                    button.onclick = () => handleFinalAnswer(answer);
+                    document.getElementById('answerButtons').appendChild(button);
+                });
+            }
+        }
+
+        async function saveToDatabase() {
+            try {
+                await addDoc(collection(db, "responses"), {
+                    answers: responses,
+                    timestamp: serverTimestamp()
+                });
+            } catch (error) {
+                console.error("Error saving responses:", error);
+                alert("Oops! Something went wrong saving your responses.");
+            }
+        }
+
+        function showFinalMessage() {
+            fadeInText(document.getElementById('questionText'), "🎉 You just made my heart the happiest! 💕💍 Forever with you! ❤️");
+            startFireworks();
+        }
+
+        function startFireworks() {
+    const duration = 30 * 1000; // 30 seconds
+    const end = Date.now() + duration;
+
+    function launchConfetti() {
+        if (Date.now() < end) {
+            confetti({
+                particleCount: 100,
+                spread: 160,
+                startVelocity: 30,
+                origin: { x: Math.random(), y: Math.random() * 0.5 }
+            });
+            setTimeout(launchConfetti, 500); // Keep triggering every 500ms
+        }
+    }
+    launchConfetti();
+
+    setTimeout(() => {
+        showFireworksButton();
+    }, duration);
+}
+
+function showFireworksButton() {
+    const answerButtons = document.getElementById('answerButtons');
+    answerButtons.innerHTML = "";
+    
+    const fireworkButton = document.createElement("button");
+    fireworkButton.innerText = "Show Fireworks Again 🎆";
+    fireworkButton.className = "answer-btn";
+    fireworkButton.onclick = startFireworks;
+
+    answerButtons.appendChild(fireworkButton);
+}
+
+        window.onload = function() {
+            askNextQuestion();
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.1"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #ffe6e6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 450px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+            transition: opacity 0.3s ease-in-out;
+        }
+        h1 {
+            color: #ff0130;
+        }
+        h3{
+            color: #3bcbff;
+        }
+        .text-input {
+            width: 90%;
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 2px solid #007bff;
+        }
+        button {
+            padding: 12px 20px;
+            margin: 5px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        .answer-btn:hover {
+            transform: scale(1.1);
+            background-color: #ff4081;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hey Bestiee | I Want to Say Something ❤️</h1>
+        <h3 id="questionText"></h3>
+        <div id="answerButtons"></div>
+    </div>
+</body>
+</html>
