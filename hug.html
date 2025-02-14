@@ -16,7 +16,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
         }
         .container {
@@ -30,7 +30,7 @@
             to { opacity: 1; }
         }
         h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
             animation: heartbeat 2s infinite;
         }
@@ -40,14 +40,14 @@
             100% { transform: scale(1); }
         }
         p {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
         }
         .hug-btn {
             background: #ff4b5c;
             color: white;
-            padding: 15px 30px;
+            padding: 12px 25px;
             border: none;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             border-radius: 12px;
             cursor: pointer;
             transition: 0.3s;
@@ -65,42 +65,51 @@
         .hidden {
             display: none;
             margin-top: 20px;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             animation: slideIn 1s ease-in-out;
         }
         @keyframes slideIn {
             from { transform: translateY(50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-        .photo-gallery {
-            margin-top: 20px;
+        .heart-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 20px auto;
         }
-        .photo-gallery img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin: 10px;
-            animation: fadeIn 2s;
+        .heart {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: red;
+            transform: rotate(-45deg);
+            animation: moveHearts 2s infinite alternate;
         }
-        .love-meter {
-            margin-top: 20px;
+        .heart:before,
+        .heart:after {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: red;
+            border-radius: 50%;
         }
-        .love-bar {
-            width: 100%;
-            background: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            height: 20px;
+        .heart:before {
+            top: -25px;
+            left: 0;
         }
-        .love-fill {
-            height: 100%;
-            width: 0;
-            background: #ff4b5c;
-            transition: width 0.5s;
+        .heart:after {
+            left: 25px;
+            top: 0;
         }
-        .quiz-container {
-            margin-top: 20px;
+        .heart.second {
+            left: 50px;
+            animation-delay: 1s;
+        }
+        @keyframes moveHearts {
+            from { transform: translateX(-30px) rotate(-45deg); }
+            to { transform: translateX(30px) rotate(-45deg); }
         }
     </style>
 </head>
@@ -112,40 +121,16 @@
         <h1>Sending You the Warmest Hug Across the Distance! 🤗💖</h1>
         <p>Even if we're miles apart, my love and warmth always find you! Close your eyes, take a deep breath, and feel my hug right now. 🤍</p>
         <button class="hug-btn" onclick="sendVirtualHug()">Feel the Hug Now!</button>
+        <div class="heart-container">
+            <div class="heart"></div>
+            <div class="heart second"></div>
+        </div>
         <p id="hug-text" class="hidden">A tight, warm hug just for you! 🤗💞 Every heartbeat of mine whispers, "I miss you!" You're my favorite place to be! 💑💕</p>
-        <div class="photo-gallery">
-            <h2>Our Sweet Memories 📸</h2>
-            <img src="photo1.jpg" alt="Memory 1">
-            <img src="photo2.jpg" alt="Memory 2">
-            <img src="photo3.jpg" alt="Memory 3">
-        </div>
-        <div class="love-meter">
-            <h2>Hug Meter 💞</h2>
-            <div class="love-bar"><div class="love-fill" id="loveFill"></div></div>
-            <button class="hug-btn" onclick="increaseLove()">Send More Love 💖</button>
-        </div>
-        <div class="quiz-container">
-            <h2>How Much Do You Miss Me? 💕</h2>
-            <button onclick="alert('A lot! 💖')">A Little</button>
-            <button onclick="alert('So much! 💕')">A Lot</button>
-            <button onclick="alert('Beyond Words! 😍')">Endlessly</button>
-        </div>
     </div>
     
     <script>
         function sendVirtualHug() {
             document.getElementById("hug-text").classList.remove("hidden");
-            document.body.classList.add("shake");
-            setTimeout(() => document.body.classList.remove("shake"), 500);
-            navigator.vibrate(500);
-        }
-        
-        function increaseLove() {
-            let fill = document.getElementById("loveFill");
-            let width = parseInt(fill.style.width) || 0;
-            if (width < 100) {
-                fill.style.width = (width + 20) + "%";
-            }
         }
     </script>
 </body>
